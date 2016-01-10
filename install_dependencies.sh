@@ -99,19 +99,22 @@ $PREFIX/bin/luarocks install nngraph
 RET=$?; if [ $RET -ne 0 ]; then echo "Error. Exiting."; exit $RET; fi
 echo "nngraph installation completed"
 
-echo "Installing Xitari ... "
+echo "Installing ALE ... "
 cd /tmp
-rm -rf xitari
-git clone https://github.com/deepmind/xitari.git
-cd xitari
+rm -rf Arcade-Learning-Environment-2.0
+git clone --recursive https://github.com/nadavbh12/Arcade-Learning-Environment-2.0.git
+cp -rf /home/administrator/DQN/ale-nano/SNES-Learning-Environment/CmakeLists.txt /tmp/Arcade-Learning-Environment-2.0/CmakeLists.txt
+cd Arcade-Learning-Environment-2.0
+cd stella-libretro; make; cd ..; echo "stella compiled";
+cd snes9x-next; make; cd ..; echo "snes9x compiled";
 $PREFIX/bin/luarocks make
 RET=$?; if [ $RET -ne 0 ]; then echo "Error. Exiting."; exit $RET; fi
-echo "Xitari installation completed"
+echo "ALE installation completed"
 
 echo "Installing Alewrap ... "
 cd /tmp
 rm -rf alewrap
-git clone https://github.com/deepmind/alewrap.git
+git clone https://github.com/nadavbh12/alewrap.git
 cd alewrap
 $PREFIX/bin/luarocks make
 RET=$?; if [ $RET -ne 0 ]; then echo "Error. Exiting."; exit $RET; fi
