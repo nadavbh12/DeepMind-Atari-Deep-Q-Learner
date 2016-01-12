@@ -103,11 +103,16 @@ echo "Installing ALE ... "
 cd /tmp
 rm -rf Arcade-Learning-Environment-2.0
 git clone --recursive https://github.com/nadavbh12/Arcade-Learning-Environment-2.0.git
-cp -rf /home/administrator/DQN/ale-nano/SNES-Learning-Environment/CmakeLists.txt /tmp/Arcade-Learning-Environment-2.0/CmakeLists.txt
+#cp -rf /home/administrator/DQN/ale-nano/SNES-Learning-Environment/CmakeLists.txt /tmp/Arcade-Learning-Environment-2.0/CmakeLists.txt
 cd Arcade-Learning-Environment-2.0
 cd stella-libretro; make; cd ..; echo "stella compiled";
 cd snes9x-next; make; cd ..; echo "snes9x compiled";
 $PREFIX/bin/luarocks make
+cp libale.so $PREFIX/lib
+if [ ! -d $PREFIX/include/ale ]; then
+    mkdir -p "ale"
+fi
+cp -R ./src/ale_interface.hpp $PREFIX/include/ale/ale_interface.hpp
 RET=$?; if [ $RET -ne 0 ]; then echo "Error. Exiting."; exit $RET; fi
 echo "ALE installation completed"
 
@@ -116,6 +121,7 @@ cd /tmp
 rm -rf alewrap
 git clone https://github.com/nadavbh12/alewrap.git
 cd alewrap
+#cp -rf /home/administrator/DQN/alewrap/alewrap/CMakeLists.txt ./alewrap/CMakeLists.txt
 $PREFIX/bin/luarocks make
 RET=$?; if [ $RET -ne 0 ]; then echo "Error. Exiting."; exit $RET; fi
 echo "Alewrap installation completed"
