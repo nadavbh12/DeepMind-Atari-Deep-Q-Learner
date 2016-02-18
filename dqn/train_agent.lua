@@ -16,6 +16,8 @@ cmd:text('Options:')
 
 cmd:option('-framework', '', 'name of training framework')
 cmd:option('-env', '', 'name of environment to use')
+cmd:option('-core', '', 'name of core to use (atari/snes)')
+cmd:option('-core_path', '', 'path to core library')
 cmd:option('-game_path', '', 'path to environment file (ROM)')
 cmd:option('-env_params', '', 'string of environment parameters')
 cmd:option('-pool_frms', '',

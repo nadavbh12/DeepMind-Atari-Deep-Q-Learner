@@ -103,25 +103,33 @@ echo "Installing ALE ... "
 cd /tmp
 rm -rf Arcade-Learning-Environment-2.0
 git clone --recursive https://github.com/nadavbh12/Arcade-Learning-Environment-2.0.git
-#cp -rf /home/administrator/DQN/ale-nano/SNES-Learning-Environment/CmakeLists.txt /tmp/Arcade-Learning-Environment-2.0/CmakeLists.txt
+### above replaced with
+#mkdir Arcade-Learning-Environment-2.0
+#cp -Rf /home/administrator/DQN/ale-nano/SNES-Learning-Environment/* /tmp/Arcade-Learning-Environment-2.0/
+### 
 cd Arcade-Learning-Environment-2.0
-cd stella-libretro; make; cd ..; echo "stella compiled";
-cd snes9x-next; make; cd ..; echo "snes9x compiled";
+cd stella-libretro; make -j 4; cd ..; echo "stella compiled";
+cd snes9x-next; make -j 4; cd ..; echo "snes9x compiled";
 $PREFIX/bin/luarocks make
 cp libale.so $PREFIX/lib
+cp stella-libretro/stella_libretro.so $PREFIX/lib
+cp snes9x-next/snes9x_next_libretro.so $PREFIX/lib
 if [ ! -d $PREFIX/include/ale ]; then
     mkdir -p "ale"
 fi
 cp -R ./src/ale_interface.hpp $PREFIX/include/ale/ale_interface.hpp
+cp -R ./src/libretro.h $PREFIX/include/ale/libretro.h
 RET=$?; if [ $RET -ne 0 ]; then echo "Error. Exiting."; exit $RET; fi
 echo "ALE installation completed"
 
 echo "Installing Alewrap ... "
 cd /tmp
 rm -rf alewrap
+
 git clone https://github.com/nadavbh12/alewrap.git
+#cp -Rf /home/administrator/DQN/alewrap/ .
+
 cd alewrap
-#cp -rf /home/administrator/DQN/alewrap/alewrap/CMakeLists.txt ./alewrap/CMakeLists.txt
 $PREFIX/bin/luarocks make
 RET=$?; if [ $RET -ne 0 ]; then echo "Error. Exiting."; exit $RET; fi
 echo "Alewrap installation completed"

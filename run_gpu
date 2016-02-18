@@ -1,12 +1,17 @@
 #!/bin/bash
 
 if [ -z "$1" ]
-  then echo "Please provide the name of the game, e.g.  ./run_gpu breakout "; exit 0
+  then echo "Please provide the name of the game and core, e.g.  ./run_gpu breakout atari"; exit 0
+fi
+if [ -z "$2" ]
+  then echo "Please provide the name of the core, e.g.  ./run_gpu breakout atari"; exit 0
 fi
 ENV=$1
+core=$2
 FRAMEWORK="alewrap"
 
 game_path=$PWD"/roms/"
+core_path=$PWD"/torch/lib"
 env_params="useRGB=true"
 agent="NeuralQLearner"
 n_replay=1
