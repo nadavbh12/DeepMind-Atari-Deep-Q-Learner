@@ -114,9 +114,9 @@ $PREFIX/bin/luarocks make
 cp libale.so $PREFIX/lib
 cp stella-libretro/stella_libretro.so $PREFIX/lib
 cp snes9x-next/snes9x_next_libretro.so $PREFIX/lib
-if [ ! -d $PREFIX/include/ale ]; then
-    mkdir -p "ale"
-fi
+
+#Creating ALE dir (-p flag will solve existing dir issues)
+mkdir -p $PREFIX/include/ale	
 cp -R ./src/ale_interface.hpp $PREFIX/include/ale/ale_interface.hpp
 cp -R ./src/libretro.h $PREFIX/include/ale/libretro.h
 RET=$?; if [ $RET -ne 0 ]; then echo "Error. Exiting."; exit $RET; fi
@@ -148,11 +148,11 @@ echo "Lua-GD installation completed"
 echo
 echo "You can run experiments by executing: "
 echo
-echo "   ./run_cpu game_name"
+echo "   ./run_cpu <game_name> <snes/atari>"
 echo
 echo "            or   "
 echo
-echo "   ./run_gpu game_name"
+echo "   ./run_gpu <game_name> <snes/atari>"
 echo
 echo "For this you need to provide the rom files of the respective games (game_name.bin) in the roms/ directory"
 echo
