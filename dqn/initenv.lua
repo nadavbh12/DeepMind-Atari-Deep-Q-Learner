@@ -24,6 +24,7 @@ function torchSetup(_opt)
     -- preprocess options:
     --- convert options strings to tables
     if opt.pool_frms then
+        print ("pool_frms: " .. tostring(opt.pool_frms));
         opt.pool_frms = str_to_table(opt.pool_frms)
     end
     if opt.env_params then
@@ -114,7 +115,8 @@ function setup(_opt)
     -- load training framework and environment
     local framework = require(opt.framework)
     assert(framework)
-
+    print ("in InitEnv")
+--    print("core path is: " .. opt.core_path)
     local gameEnv = framework.GameEnvironment(opt)
     local gameActions = gameEnv:getActions()
 

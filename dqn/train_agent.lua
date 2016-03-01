@@ -52,6 +52,7 @@ local opt = cmd:parse(arg)
 
 --- General setup.
 local game_env, game_actions, agent, opt = setup(opt)
+print("In train Agent: setup completed")
 
 -- override print to always flush the output
 local old_print = print
