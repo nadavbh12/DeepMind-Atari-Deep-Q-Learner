@@ -16,11 +16,11 @@ function scale:__init(height, width)
 end
 
 function scale:forward(x)
-    local x = x
+--    local x = x
+    local x = torch.squeeze(x) --shai: added squeezed x for ignore first dim
     if x:dim() > 3 then
         x = x[1]
     end
-
     x = image.rgb2y(x)
     x = image.scale(x, self.width, self.height, 'bilinear')
     return x

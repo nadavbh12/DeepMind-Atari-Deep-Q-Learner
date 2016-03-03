@@ -115,7 +115,6 @@ function setup(_opt)
     -- load training framework and environment
     local framework = require(opt.framework)
     assert(framework)
-    print ("in InitEnv")
 --    print("core path is: " .. opt.core_path)
     local gameEnv = framework.GameEnvironment(opt)
     local gameActions = gameEnv:getActions()
