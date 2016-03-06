@@ -80,6 +80,21 @@ local episode_reward
 
 local screen, reward, terminal = game_env:getState()
 
+----additions from itai to print convergance
+--require ('optim') --itai forgot
+--opt.visualize = 1
+--opt.save="/home/administrator/DQN/DeepMind-Atari-Deep-Q-Learner/printGraph"
+--os.execute('mkdir -p ' .. opt.save)
+--cmd:log(opt.save .. '/Log.txt', opt)
+--local logFilename = paths.concat('opt.save','ErrorRate.log')
+--local Log = optim.Logger(logFilename)
+------ end of additions
+
+
+-- Shai: printing reward to file
+totalRewardFile = io.open(opt.name .. "_total_reward.txt", "w")
+episodeRewardFile = io.open(opt.name .. "_episode_reward.txt", "w")
+-- end of printing additions
 print("Iteration ..", step)
 local win = nil
 while step < opt.steps do
@@ -96,7 +111,7 @@ while step < opt.steps do
             screen, reward, terminal = game_env:newGame()
         end
     end
-
+  
     -- display screen
     win = image.display({image=screen, win=win})
 
@@ -107,7 +122,7 @@ while step < opt.steps do
         agent:report()
         collectgarbage()
     end
-
+    
     if step%1000 == 0 then collectgarbage() end
 
     if step % opt.eval_freq == 0 and step > learn_start then
@@ -122,7 +137,7 @@ while step < opt.steps do
         local eval_time = sys.clock()
         for estep=1,opt.eval_steps do
             local action_index = agent:perceive(reward, screen, terminal, true, 0.05)
-
+            
             -- Play game in test mode (episodes don't end when losing a life)
             screen, reward, terminal = game_env:step(game_actions[action_index])
 
@@ -139,8 +154,11 @@ while step < opt.steps do
 
             if terminal then
                 total_reward = total_reward + episode_reward
+                -- shai: added prints
+                episodeRewardFile:write(episode_reward .. "\n")
+                totalRewardFile:write(total_reward.. "\n")
                 episode_reward = 0
-                nepisodes = nepisodes + 1
+                nepisodes = nepisodes + 1             
                 screen, reward, terminal = game_env:nextRandomGame()
             end
         end
@@ -154,7 +172,6 @@ while step < opt.steps do
         if #reward_history == 0 or total_reward > torch.Tensor(reward_history):max() then
             agent.best_network = agent.network:clone()
         end
-
         if agent.v_avg then
             v_history[ind] = agent.v_avg
             td_history[ind] = agent.tderr_avg
@@ -171,7 +188,15 @@ while step < opt.steps do
         local time_dif = time_history[ind+1] - time_history[ind]
 
         local training_rate = opt.actrep*opt.eval_freq/time_dif
-
+        
+--        additions from itai to print convergance
+--        Log:add{['Reward']= reward,['Loss']=loss }
+--        if opt.visualize == 1 then
+--            Log:style{['Reward'] = '-',['Loss'] = '-'}
+--            Log:plot()
+--        end
+--        
+        -- end of additions
         print(string.format(
             '\nSteps: %d (frames: %d), reward: %.2f, epsilon: %.2f, lr: %G, ' ..
             'training time: %ds, training rate: %dfps, testing time: %ds, ' ..
@@ -220,3 +245,5 @@ while step < opt.steps do
         collectgarbage()
     end
 end
+totalRewardFile:close()
+episodeRewardFile:close()

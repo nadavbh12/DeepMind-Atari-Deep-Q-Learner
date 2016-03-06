@@ -14,7 +14,8 @@ cmd:text()
 cmd:text('Train Agent in Environment:')
 cmd:text()
 cmd:text('Options:')
-
+cmd:option('-core', '', 'name of core to use (atari/snes)') --shai: added core
+cmd:option('-core_path', '', 'path to core library')
 cmd:option('-framework', '', 'name of training framework')
 cmd:option('-env', '', 'name of environment to use')
 cmd:option('-game_path', '', 'path to environment file (ROM)')
@@ -44,7 +45,7 @@ local opt = cmd:parse(arg)
 
 --- General setup.
 local game_env, game_actions, agent, opt = setup(opt)
-
+--print ("SETUP completed")
 -- override print to always flush the output
 local old_print = print
 local print = function(...)
