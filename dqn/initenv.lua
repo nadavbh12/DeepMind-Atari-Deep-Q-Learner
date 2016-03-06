@@ -35,6 +35,8 @@ function torchSetup(_opt)
         opt.agent_params.gpu       = opt.gpu
         opt.agent_params.best      = opt.best
         opt.agent_params.verbose   = opt.verbose
+        opt.agent_params.display_preprocess           = opt.display_preprocess --shai: added display preprocess
+        
         if opt.network ~= '' then
             opt.agent_params.network = opt.network
         end
@@ -104,6 +106,7 @@ function setup(_opt)
     _opt.pool_frms = str_to_table(_opt.pool_frms)
     _opt.env_params = str_to_table(_opt.env_params)
     _opt.agent_params = str_to_table(_opt.agent_params)
+    
     if _opt.agent_params.transition_params then
         _opt.agent_params.transition_params =
             str_to_table(_opt.agent_params.transition_params)
@@ -120,9 +123,10 @@ function setup(_opt)
     local gameActions = gameEnv:getActions()
 
     -- agent options
-    _opt.agent_params.actions   = gameActions
-    _opt.agent_params.gpu       = _opt.gpu
-    _opt.agent_params.best      = _opt.best
+    _opt.agent_params.actions                      = gameActions
+    _opt.agent_params.gpu                          = _opt.gpu
+    _opt.agent_params.best                         = _opt.best
+    _opt.agent_params.display_preprocess           = _opt.display_preprocess --shai: added display preprocess
     if _opt.network ~= '' then
         _opt.agent_params.network = _opt.network
     end

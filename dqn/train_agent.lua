@@ -45,6 +45,7 @@ cmd:option('-verbose', 2,
            'the higher the level, the more information is printed to screen')
 cmd:option('-threads', 1, 'number of BLAS threads')
 cmd:option('-gpu', -1, 'gpu flag')
+cmd:option('-display_preprocess',0,'if 1 displaying preprocessed (84x84 image)')
 
 cmd:text()
 
@@ -81,13 +82,13 @@ local episode_reward
 local screen, reward, terminal = game_env:getState()
 
 ----additions from itai to print convergance
---require ('optim') --itai forgot
---opt.visualize = 1
---opt.save="/home/administrator/DQN/DeepMind-Atari-Deep-Q-Learner/printGraph"
---os.execute('mkdir -p ' .. opt.save)
---cmd:log(opt.save .. '/Log.txt', opt)
---local logFilename = paths.concat('opt.save','ErrorRate.log')
---local Log = optim.Logger(logFilename)
+require ('optim') --itai forgot
+opt.visualize = 1
+opt.save="/home/administrator/DQN/DeepMind-Atari-Deep-Q-Learner/printGraph"
+os.execute('mkdir -p ' .. opt.save)
+cmd:log(opt.save .. '/Log.txt', opt)
+local logFilename = paths.concat('opt.save','ErrorRate.log')
+local Log = optim.Logger(logFilename)
 ------ end of additions
 
 
@@ -100,7 +101,6 @@ local win = nil
 while step < opt.steps do
     step = step + 1
     local action_index = agent:perceive(reward, screen, terminal)
-
     -- game over? get next game!
     if not terminal then
         screen, reward, terminal = game_env:step(game_actions[action_index], true)
@@ -190,11 +190,11 @@ while step < opt.steps do
         local training_rate = opt.actrep*opt.eval_freq/time_dif
         
 --        additions from itai to print convergance
---        Log:add{['Reward']= reward,['Loss']=loss }
---        if opt.visualize == 1 then
---            Log:style{['Reward'] = '-',['Loss'] = '-'}
---            Log:plot()
---        end
+        Log:add{['Reward']= reward,['Loss']=loss }
+        if opt.visualize == 1 then
+            Log:style{['Reward'] = '-',['Loss'] = '-'}
+            Log:plot()
+        end
 --        
         -- end of additions
         print(string.format(

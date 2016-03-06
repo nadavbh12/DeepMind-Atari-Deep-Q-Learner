@@ -4,6 +4,7 @@ Copyright (c) 2014 Google Inc.
 See LICENSE file for full terms of limited license.
 ]]
 
+-- shai additions
 if not dqn then
     require 'initenv'
 end
@@ -17,6 +18,8 @@ function nql:__init(args)
     self.n_actions  = #self.actions
     self.verbose    = args.verbose
     self.best       = args.best
+    self.display_preprocess = args.display_preprocess
+    
 
     --- epsilon annealing
     self.ep_start   = args.ep or 1
@@ -299,7 +302,9 @@ end
 
 function nql:perceive(reward, rawstate, terminal, testing, testing_ep)
     -- Preprocess state (will be set to nil if terminal)
+    
     local state = self:preprocess(rawstate):float()
+      
     local curState
 
     if self.max_reward then
@@ -328,7 +333,13 @@ function nql:perceive(reward, rawstate, terminal, testing, testing_ep)
 
     curState= self.transitions:get_recent()
     curState = curState:resize(1, unpack(self.input_dims))
+    
 
+  if (self.display_preprocess == 1) then --flag for displaying preprocessed image
+      local printScreen = state:resize(84,84) --shai : resizeing size for display (state (after preprocess) size for snes is 7056 = 84*84)
+      win = image.display({image=printScreen, win=win})
+  end
+  
     -- Select action
     local actionIndex = 1
     if not terminal then
