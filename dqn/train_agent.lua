@@ -46,6 +46,7 @@ cmd:option('-verbose', 2,
 cmd:option('-threads', 1, 'number of BLAS threads')
 cmd:option('-gpu', -1, 'gpu flag')
 cmd:option('-display_preprocess',0,'if 1 displaying preprocessed (84x84 image)')
+cmd:option('-display_screen',1,'if 1 display image from ALE')
 
 cmd:text()
 
@@ -93,8 +94,7 @@ local Log = optim.Logger(logFilename)
 
 
 -- Shai: printing reward to file
-totalRewardFile = io.open(opt.name .. "_total_reward.txt", "w")
-episodeRewardFile = io.open(opt.name .. "_episode_reward.txt", "w")
+resFile = io.open(opt.name .. "_results.txt", "w")
 -- end of printing additions
 print("Iteration ..", step)
 local win = nil
@@ -113,7 +113,9 @@ while step < opt.steps do
     end
   
     -- display screen
-    win = image.display({image=screen, win=win})
+    if opt.display_screen then
+        win = image.display({image=screen, win=win})
+    end
 
     if step % opt.prog_freq == 0 then
         assert(step==agent.numSteps, 'trainer step: ' .. step ..
@@ -142,7 +144,9 @@ while step < opt.steps do
             screen, reward, terminal = game_env:step(game_actions[action_index])
 
             -- display screen
-            win = image.display({image=screen, win=win})
+	    if opt.display_screen then
+	            win = image.display({image=screen, win=win})
+	    end
 
             if estep%1000 == 0 then collectgarbage() end
 
@@ -155,8 +159,8 @@ while step < opt.steps do
             if terminal then
                 total_reward = total_reward + episode_reward
                 -- shai: added prints
-                episodeRewardFile:write(episode_reward .. "\n")
-                totalRewardFile:write(total_reward.. "\n")
+		resFile:write(episode_reward .. ", " .. total_reward .. ", " .. agent.q_max .. ", " .. agent.v_avg .. ", " .. agent.tderr_avg .. ",\n")
+		resFile:flush()
                 episode_reward = 0
                 nepisodes = nepisodes + 1             
                 screen, reward, terminal = game_env:nextRandomGame()
@@ -245,5 +249,5 @@ while step < opt.steps do
         collectgarbage()
     end
 end
-totalRewardFile:close()
-episodeRewardFile:close()
+
+resFile:close()
