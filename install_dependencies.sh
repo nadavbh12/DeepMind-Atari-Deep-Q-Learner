@@ -47,7 +47,7 @@ echo "==> Torch7's dependencies have been installed"
 
 # Build and install Torch7
 cd /tmp
-rm -rf luajit-rocks
+sudo rm -rf luajit-rocks
 git clone https://github.com/torch/luajit-rocks.git
 cd luajit-rocks
 mkdir -p build
@@ -101,7 +101,7 @@ echo "nngraph installation completed"
 
 echo "Installing ALE ... "
 cd /tmp
-rm -rf Arcade-Learning-Environment-2.0
+sudo rm -rf Arcade-Learning-Environment-2.0
 git clone --recursive https://github.com/nadavbh12/Arcade-Learning-Environment-2.0.git
 ### above replaced with
 #mkdir Arcade-Learning-Environment-2.0
@@ -124,7 +124,7 @@ echo "ALE installation completed"
 
 echo "Installing Alewrap ... "
 cd /tmp
-rm -rf alewrap
+sudo rm -rf alewrap
 
 git clone https://github.com/nadavbh12/alewrap.git
 #cp -Rf /home/administrator/DQN/alewrap/ .

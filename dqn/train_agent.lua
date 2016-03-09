@@ -85,7 +85,7 @@ local screen, reward, terminal = game_env:getState()
 ----additions from itai to print convergance
 require ('optim') --itai forgot
 opt.visualize = 1
-opt.save="/home/administrator/DQN/DeepMind-Atari-Deep-Q-Learner/printGraph"
+opt.save="printGraph"
 os.execute('mkdir -p ' .. opt.save)
 cmd:log(opt.save .. '/Log.txt', opt)
 local logFilename = paths.concat('opt.save','ErrorRate.log')
