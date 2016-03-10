@@ -80,6 +80,9 @@ local nrewards
 local nepisodes
 local episode_reward
 
+local save_files = {}
+local save_index = 0
+
 local screen, reward, terminal = game_env:getState()
 
 ----additions from itai to print convergance
@@ -194,11 +197,11 @@ while step < opt.steps do
         local training_rate = opt.actrep*opt.eval_freq/time_dif
         
 --        additions from itai to print convergance
-        Log:add{['Reward']= reward,['Loss']=loss }
-        if opt.visualize == 1 then
-            Log:style{['Reward'] = '-',['Loss'] = '-'}
-            Log:plot()
-        end
+--        Log:add{['Reward']= reward,['Loss']=loss }
+--        if opt.visualize == 1 then
+--            Log:style{['Reward'] = '-',['Loss'] = '-'}
+--            Log:plot()
+--        end
 --        
         -- end of additions
         print(string.format(
@@ -211,6 +214,7 @@ while step < opt.steps do
     end
 
     if step % opt.save_freq == 0 or step == opt.steps then
+	print('save_freq')
         local s, a, r, s2, term = agent.valid_s, agent.valid_a, agent.valid_r,
             agent.valid_s2, agent.valid_term
         agent.valid_s, agent.valid_a, agent.valid_r, agent.valid_s2,
@@ -223,6 +227,11 @@ while step < opt.steps do
         local filename = opt.name
         if opt.save_versions > 0 then
             filename = filename .. "_" .. math.floor(step / opt.save_versions)
+	    if save_files[save_index] ~= nil then
+		os.remove(save_files[save_index] .. '.t7')
+	    end
+	    save_files[save_index] = filename
+	    save_index = (save_index + 1 ) % opt.save_versions
         end
         filename = filename
         torch.save(filename .. ".t7", {agent = agent,
