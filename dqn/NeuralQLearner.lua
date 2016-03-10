@@ -79,7 +79,7 @@ function nql:__init(args)
         -- try to load saved agent
         local err_msg, exp = pcall(torch.load, self.network)
         if not err_msg then
-            error("Could not find network file ")
+            error("Could not find network file " .. self.network)
         end
         if self.best and exp.best_model then
             self.network = exp.best_model

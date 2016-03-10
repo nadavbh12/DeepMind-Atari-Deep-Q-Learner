@@ -31,12 +31,11 @@ cmd:option('-network', '', 'reload pretrained network')
 cmd:option('-agent', '', 'name of agent file to use')
 cmd:option('-agent_params', '', 'string of agent parameters')
 cmd:option('-seed', 1, 'fixed input seed for repeatable experiments')
-cmd:option('-saveNetworkParams', false,
-           'saves the agent network in a separate file')
+cmd:option('-save_network_params', 0, 'saves the agent network in a separate file')
 cmd:option('-prog_freq', 5*10^3, 'frequency of progress output')
 cmd:option('-save_freq', 5*10^4, 'the model is saved every save_freq steps')
 cmd:option('-eval_freq', 10^4, 'frequency of greedy evaluation')
-cmd:option('-save_versions', 0, '')
+cmd:option('-save_versions', 1, 'number of agents to save. will save every save_freq steps, saving the last agents.')
 
 cmd:option('-steps', 10^5, 'number of training steps to perform')
 cmd:option('-eval_steps', 10^5, 'number of evaluation steps')
@@ -86,7 +85,7 @@ local save_index = 0
 local screen, reward, terminal = game_env:getState()
 
 ----additions from itai to print convergance
-require ('optim') --itai forgot
+require ('optim')
 opt.visualize = 1
 opt.save="printGraph"
 os.execute('mkdir -p ' .. opt.save)
@@ -95,9 +94,16 @@ local logFilename = paths.concat('opt.save','ErrorRate.log')
 local Log = optim.Logger(logFilename)
 ------ end of additions
 
-
 -- Shai: printing reward to file
-resFile = io.open(opt.name .. "_results.txt", "w")
+local checkExist = io.open(opt.name .. "_results.txt", "r")
+if checkExist == nil then
+    io.close(checkExist)
+    resFile = io.open(opt.name .. "_results.txt", "w")
+else
+    io.close(checkExist)
+    resFile = io.open(opt.name .. "_results.txt", "a")
+end
+
 -- end of printing additions
 print("Iteration ..", step)
 local win = nil
@@ -214,7 +220,6 @@ while step < opt.steps do
     end
 
     if step % opt.save_freq == 0 or step == opt.steps then
-	print('save_freq')
         local s, a, r, s2, term = agent.valid_s, agent.valid_a, agent.valid_r,
             agent.valid_s2, agent.valid_term
         agent.valid_s, agent.valid_a, agent.valid_r, agent.valid_s2,
@@ -229,6 +234,9 @@ while step < opt.steps do
             filename = filename .. "_" .. math.floor(step / opt.save_versions)
 	    if save_files[save_index] ~= nil then
 		os.remove(save_files[save_index] .. '.t7')
+		    if opt.save_network_params == 1 then
+			os.remove(filename..'.params.t7')
+		    end
 	    end
 	    save_files[save_index] = filename
 	    save_index = (save_index + 1 ) % opt.save_versions
@@ -245,7 +253,7 @@ while step < opt.steps do
                                 td_history = td_history,
                                 qmax_history = qmax_history,
                                 arguments=opt})
-        if opt.saveNetworkParams then
+        if opt.save_network_params == 1 then
             local nets = {network=w:clone():float()}
             torch.save(filename..'.params.t7', nets, 'ascii')
         end
