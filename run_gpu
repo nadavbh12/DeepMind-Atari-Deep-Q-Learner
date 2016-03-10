@@ -47,8 +47,17 @@ pool_frms="type="$pool_frms_type",size="$pool_frms_size
 num_threads=4
 display_preprocess=0
 saveNetworkParams=0
-args="-framework $FRAMEWORK -game_path $game_path -display_preprocess $display_preprocess -save_versions $save_versions -save_network_params $saveNetworkParams -core $core -core_path $core_path -name $agent_name -env $ENV -env_params $env_params -agent $agent -agent_params $agent_params -steps $steps -eval_freq $eval_freq -eval_steps $eval_steps -prog_freq $prog_freq -save_freq $save_freq -actrep $actrep -gpu $gpu -random_starts $random_starts -pool_frms $pool_frms -seed $seed -threads $num_threads "
+display_screen=0
+
+args="-framework $FRAMEWORK -game_path $game_path -display_preprocess $display_preprocess -display_screen $display_screen -save_versions $save_versions -save_network_params $saveNetworkParams -core $core -core_path $core_path -name $agent_name -env $ENV -env_params $env_params -agent $agent -agent_params $agent_params -steps $steps -eval_freq $eval_freq -eval_steps $eval_steps -prog_freq $prog_freq -save_freq $save_freq -actrep $actrep -gpu $gpu -random_starts $random_starts -pool_frms $pool_frms -seed $seed -threads $num_threads "
 echo $args
 
 cd dqn
-../torch/bin/qlua train_agent.lua $args
+
+if [ $display_screen -eq 1 ]; then
+	echo "qlua"
+	../torch/bin/qlua train_agent.lua $args
+else
+	echo "luajit"
+	../torch/bin/luajit train_agent.lua $args
+fi
