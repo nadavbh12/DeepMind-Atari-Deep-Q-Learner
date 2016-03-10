@@ -45,8 +45,8 @@ cmd:option('-verbose', 2,
            'the higher the level, the more information is printed to screen')
 cmd:option('-threads', 1, 'number of BLAS threads')
 cmd:option('-gpu', -1, 'gpu flag')
-cmd:option('-display_preprocess',0,'if 1 displaying preprocessed (84x84 image)')
-cmd:option('-display_screen',1,'if 1 display image from ALE')
+cmd:option('-display_preprocess', 0,'if 1 displaying preprocessed (84x84 image)')
+cmd:option('-display_screen', 0,'if 1 display image from ALE')
 
 cmd:text()
 
@@ -113,7 +113,7 @@ while step < opt.steps do
     end
   
     -- display screen
-    if opt.display_screen then
+    if opt.display_screen ~= 0 then
         win = image.display({image=screen, win=win})
     end
 
@@ -144,8 +144,8 @@ while step < opt.steps do
             screen, reward, terminal = game_env:step(game_actions[action_index])
 
             -- display screen
-	    if opt.display_screen then
-	            win = image.display({image=screen, win=win})
+	    if opt.display_screen ~= 0 then
+	    	win = image.display({image=screen, win=win})
 	    end
 
             if estep%1000 == 0 then collectgarbage() end
