@@ -97,7 +97,6 @@ local Log = optim.Logger(logFilename)
 -- Shai: printing reward to file
 local checkExist = io.open(opt.name .. "_results.txt", "r")
 if checkExist == nil then
-    io.close(checkExist)
     resFile = io.open(opt.name .. "_results.txt", "w")
 else
     io.close(checkExist)
@@ -153,9 +152,9 @@ while step < opt.steps do
             screen, reward, terminal = game_env:step(game_actions[action_index])
 
             -- display screen
-	    if opt.display_screen ~= 0 then
-	    	win = image.display({image=screen, win=win})
-	    end
+      	    if opt.display_screen ~= 0 then
+      	    	  win = image.display({image=screen, win=win})
+      	    end
 
             if estep%1000 == 0 then collectgarbage() end
 
@@ -168,14 +167,14 @@ while step < opt.steps do
             if terminal then
                 total_reward = total_reward + episode_reward
                 -- shai: added prints
-		resFile:write(episode_reward .. ", " .. total_reward .. ", " .. agent.q_max .. ", " .. agent.v_avg .. ", " .. agent.tderr_avg .. ",\n")
-		resFile:flush()
+
                 episode_reward = 0
                 nepisodes = nepisodes + 1             
                 screen, reward, terminal = game_env:nextRandomGame()
             end
         end
-
+        resFile:write(total_reward .. ", " ..  agent.v_avg .. ", " .. agent.tderr_avg .. ",\n")
+        resFile:flush()
         eval_time = sys.clock() - eval_time
         start_time = start_time + eval_time
         agent:compute_validation_statistics()
