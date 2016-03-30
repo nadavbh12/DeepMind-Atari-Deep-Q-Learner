@@ -38,6 +38,7 @@ cmd:option('-threads', 1, 'number of BLAS threads')
 cmd:option('-gpu', -1, 'gpu flag')
 cmd:option('-gif_file', '', 'GIF path to write session screens')
 cmd:option('-csv_file', '', 'CSV path to write session data')
+cmd:option('-display_screen', 0,'if 1 display image from ALE')
 
 cmd:text()
 
@@ -73,7 +74,9 @@ im:gifAnimAdd(gif_filename, false, 0, 0, 7, gd.DISPOSAL_NONE)
 
 -- remember the image and show it first
 local previm = im
-local win = image.display({image=screen})
+if opt.display_screen ~= 0 then
+  local win = image.display({image=screen})
+end
 
 print("Started playing...")
 
@@ -89,7 +92,9 @@ while not terminal do
     screen, reward, terminal = game_env:step(game_actions[action_index], false)
 
     -- display screen
-    image.display({image=screen, win=win})
+    if opt.display_screen ~= 0 then
+      image.display({image=screen, win=win})
+    end
 
     -- create gd image from tensor
     jpg = image.compressJPG(screen:squeeze(), 100)

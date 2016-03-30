@@ -16,7 +16,7 @@ n_replay=1
 netfile="\"convnet_atari3\""
 #netfile="\"DQN3_0_1_tetris_and_dr_mario.sfc_FULL_Y_frameRep=4_actRep=5_112500.t7\""
 update_freq=4
-actrep=5
+actrep=8
 discount=0.99
 seed=1
 learn_start=600
@@ -27,7 +27,7 @@ replay_memory=1000000
 eps_end=0.1
 eps_endt=replay_memory
 lr=0.00025
-agent_type="DQN3_0_1"
+agent_type="DDQN3_0_1"
 preproc_net="\"net_downsample_2x_full_y\""
 #agent_name="DQN3_0_1_mortal_kombat.sfc_FULL_Y.t7_50000"
 hist_len=4
