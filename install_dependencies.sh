@@ -102,18 +102,16 @@ echo "nngraph installation completed"
 echo "Installing ALE ... "
 cd /tmp
 sudo rm -rf Arcade-Learning-Environment-2.0
-git clone --recursive https://github.com/nadavbh12/Arcade-Learning-Environment-2.0.git
+git clone https://github.com/nadavbh12/Arcade-Learning-Environment-2.0.git
 ### above replaced with
 #mkdir Arcade-Learning-Environment-2.0
-#cp -Rf /home/administrator/DQN/ale-nano/SNES-Learning-Environment/* /tmp/Arcade-Learning-Environment-2.0/
+#cp -Rf /home/administrator/DQN/tempDQN/Arcade-Learning-Environment-2.0/* Arcade-Learning-Environment-2.0/
 ### 
 cd Arcade-Learning-Environment-2.0
-cd stella-libretro; make -j 4; cd ..; echo "stella compiled";
-cd snes9x-next; make -j 4; cd ..; echo "snes9x compiled";
 $PREFIX/bin/luarocks make
 cp libale.so $PREFIX/lib
 cp stella-libretro/stella_libretro.so $PREFIX/lib
-cp snes9x-next/snes9x_next_libretro.so $PREFIX/lib
+cp snes9x-next/snes9x2010_libretro.so.so $PREFIX/lib
 
 #Creating ALE dir (-p flag will solve existing dir issues)
 mkdir -p $PREFIX/include/ale	
